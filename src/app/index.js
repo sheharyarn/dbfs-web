@@ -1,6 +1,7 @@
-import React     from 'react'
-import AppRouter from './router'
-import './app.css';
+import React  from 'react'
+import Router from 'app/router'
+
+import 'app/index.css'
 
 
 class App extends React.Component {
@@ -11,7 +12,7 @@ class App extends React.Component {
           <h1 className="App-title">DBFS</h1>
         </header>
 
-        <AppRouter/>
+        <Router/>
       </div>
     );
   }

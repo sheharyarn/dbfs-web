@@ -1,5 +1,6 @@
-import React           from 'react'
-import Home            from './home/index'
+import React from 'react'
+import Home  from 'app/home'
+
 import {Switch, Route} from 'react-router-dom'
 
 
