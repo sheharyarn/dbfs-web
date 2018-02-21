@@ -1,4 +1,5 @@
-import React from 'react'
+import React       from 'react'
+import BlockList   from 'app/home/block-list'
 import NodeService from 'services/node'
 
 
@@ -15,22 +16,30 @@ class Home extends React.Component {
     };
   }
 
+
   componentDidMount() {
     NodeService
       .index()
       .then((response) => this.setState(response));
   }
 
+
   render() {
     return (
       <div>
-        <h1>Homepage</h1>
+        <div className='home-left'>
+          <h2>Recent Blocks</h2>
+          <BlockList blocks={this.state.recent.entries} />
+        </div>
 
-        <code>{JSON.stringify(this.state)}</code>
+        <div className='home-right'>
+        </div>
       </div>
     )
   }
+
 }
+
 
 export default Home;
 
