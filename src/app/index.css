@@ -9,15 +9,22 @@
   font-size: large;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-
 main {
-  padding: 30px;
+  margin: 50px auto;
+  max-width: 960px;
 }
+
+
+
+.home-section {
+  display: inline-block;
+  width: 50%;
+}
+
+.home-left { float: left;}
+.home-right { float: right;}
+
+
 
 .block-item {
   background-color: #222;
@@ -30,3 +37,7 @@ main {
   display: block;
 }
 
+
+.node-item span {
+  color: #ccc;
+}

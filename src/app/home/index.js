@@ -1,6 +1,8 @@
 import React       from 'react'
-import BlockList   from 'app/home/block-list'
 import NodeService from 'services/node'
+
+import BlockList   from 'app/home/block-list'
+import BulletInfo  from 'app/home/bullet-info'
 
 
 class Home extends React.Component {
@@ -25,17 +27,42 @@ class Home extends React.Component {
 
 
   render() {
+    const {recent, status, count, nodes} = this.state;
     return (
       <div>
-        <div className='home-left'>
+        <div className='home-section home-left'>
           <h2>Recent Blocks</h2>
-          <BlockList blocks={this.state.recent.entries} />
+          <BlockList blocks={recent.entries} />
         </div>
 
-        <div className='home-right'>
+        <div className='home-section home-right'>
+          <h2>Blockchain Information</h2>
+
+          <ul>
+            <BulletInfo name='App Status'    value={status} />
+            <BulletInfo name='No. of Blocks' value={count} />
+            <BulletInfo name='No. of Files'  value={count - 1} />
+            <BulletInfo name='No. of Nodes'  value={nodes.length} />
+          </ul>
+
+          <hr/>
+
+          <h2>Connected Nodes</h2>
+          <ul>
+            { nodes.map(this.renderNode) }
+          </ul>
         </div>
       </div>
     )
+  }
+
+
+  renderNode(node) {
+    return (
+      <li className='node-item'>
+        {node.name} <span>({node.sync}%)</span>
+      </li>
+    );
   }
 
 }
