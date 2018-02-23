@@ -1,5 +1,6 @@
 import React from 'react'
 import Home  from 'app/home'
+import Block from 'app/block'
 
 import {Switch, Route} from 'react-router-dom'
 
@@ -9,13 +10,13 @@ class AppRouter extends React.Component {
     return (
       <main>
         <Switch>
-          <Route exact path='/' component={Home} />
-          { /* <Route path='/roster' component={Roster}/> */ }
-          { /* <Route path='/schedule' component={Schedule}/> */ }
+          <Route exact path='/'            component={Home}  />
+          <Route exact path='/block/:hash' component={Block} />
         </Switch>
       </main>
     );
   }
 }
+
 
 export default AppRouter;

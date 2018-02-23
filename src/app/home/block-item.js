@@ -1,6 +1,6 @@
 import React     from 'react'
 import PropTypes from 'prop-types'
-
+import { Link }  from 'react-router-dom'
 
 const blockTypes = ['zero', 'file_create'];
 
@@ -10,9 +10,9 @@ class BlockItem extends React.Component {
     const { block } = this.props;
 
     return (
-      <a id={`block-${block.id}`} className='block-item'>
+      <Link to={`/block/${block.hash}`} id={`block-${block.id}`} className='block-item'>
         {block.hash}
-      </a>
+      </Link>
     );
   }
 }

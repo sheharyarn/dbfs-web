@@ -59,7 +59,7 @@ class Home extends React.Component {
 
   renderNode(node) {
     return (
-      <li className='node-item'>
+      <li className='node-item' key={node.name}>
         {node.name} <span>({node.sync}%)</span>
       </li>
     );
