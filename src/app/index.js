@@ -1,5 +1,6 @@
 import React  from 'react'
 import Router from 'app/router'
+import {Link} from 'react-router-dom';
 
 import 'app/index.css'
 
@@ -9,7 +10,9 @@ class App extends React.Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title">DBFS</h1>
+          <Link to='/'>
+            <h1 className="App-title">DBFS</h1>
+          </Link>
         </header>
 
         <Router/>

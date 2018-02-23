@@ -1,8 +1,12 @@
 .App-header {
   background-color: #222;
   padding: 20px;
+}
+
+.App-header a {
   color: white;
   text-align: center;
+  text-decoration: none;
 }
 
 .App-intro {
