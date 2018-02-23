@@ -42,3 +42,14 @@ main {
 .node-item span {
   color: #ccc;
 }
+
+
+.raw-display code {
+  margin: 10px 0 20px 0;
+  display: inline-block;
+  background-color: #eee;
+  color: #555;
+  padding: 5px 8px;
+  width: 100%;
+  word-wrap: break-word;
+}
