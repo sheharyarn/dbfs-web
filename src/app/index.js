@@ -2,8 +2,6 @@ import React  from 'react'
 import Router from 'app/router'
 import {Link} from 'react-router-dom';
 
-import 'app/index.css'
-
 
 class App extends React.Component {
   render() {
