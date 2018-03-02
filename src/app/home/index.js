@@ -2,7 +2,8 @@ import React       from 'react'
 import NodeService from 'services/node'
 
 import BlockList   from 'app/home/block-list'
-import BulletInfo  from 'app/home/bullet-info'
+import Title       from 'components/title'
+import BulletInfo  from 'components/bullet-info'
 
 
 class Home extends React.Component {
@@ -29,14 +30,14 @@ class Home extends React.Component {
   render() {
     const {recent, status, count, nodes} = this.state;
     return (
-      <div>
-        <div className='home-section home-left'>
-          <h2>Recent Blocks</h2>
+      <div className='columns'>
+        <div className='column is-two-thirds'>
+          <Title value='Recent Blocks' />
           <BlockList blocks={recent.entries} />
         </div>
 
-        <div className='home-section home-right'>
-          <h2>Blockchain Information</h2>
+        <div className='column'>
+          <Title value='Blockchain Information' />
 
           <ul>
             <BulletInfo name='App Status'    value={status} />
@@ -47,7 +48,7 @@ class Home extends React.Component {
 
           <hr/>
 
-          <h2>Connected Nodes</h2>
+          <Title value='Connected Nodes' />
           <ul>
             { nodes.map(this.renderNode) }
           </ul>
