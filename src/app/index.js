@@ -4,16 +4,33 @@ import {Link} from 'react-router-dom';
 
 
 class App extends React.Component {
+  renderHeader() {
+    return (
+      <section className='hero is-primary'>
+        <div className='hero-body'>
+          <div className='container'>
+
+            <Link to='/'>
+              <h1 className='title'>DBFS</h1>
+            </Link>
+
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <Link to='/'>
-            <h1 className="App-title">DBFS</h1>
-          </Link>
-        </header>
+      <div className="dbfs-app">
+        { this.renderHeader() }
 
-        <Router/>
+        <section className='section'>
+          <div className='container'>
+            <Router/>
+          </div>
+        </section>
+
       </div>
     );
   }
