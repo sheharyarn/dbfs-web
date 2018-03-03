@@ -1,5 +1,5 @@
 import React from 'react'
-import RawDisplay from 'app/block/raw-display'
+import RawDisplay from 'components/raw-display'
 import BlockService from 'services/block'
 
 
