@@ -9,7 +9,7 @@ class RawDisplay extends React.Component {
       <div className='raw-display'>
         <b>{name}:</b>
         <br/>
-        <code>{value}</code>
+        <code className='has-text-info'>{value}</code>
       </div>
     );
   }
