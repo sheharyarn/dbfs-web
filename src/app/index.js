@@ -8,7 +8,7 @@ class App extends React.Component {
     return (
       <section className='hero is-primary'>
         <div className='hero-body'>
-          <div className='container'>
+          <div className='container has-text-centered'>
 
             <Link to='/'>
               <h1 className='title'>DBFS</h1>

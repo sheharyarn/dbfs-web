@@ -1,6 +1,6 @@
 import React     from 'react'
 import PropTypes from 'prop-types'
-import BlockItem from 'app/home/block-item'
+import { Link }  from 'react-router-dom'
 
 
 class BlockList extends React.Component {
@@ -8,8 +8,10 @@ class BlockList extends React.Component {
     const { blocks } = this.props;
 
     return (
-      <div>
-        { blocks.map(this.renderBlock) }
+      <div className='tile is-ancestor is-10'>
+        <div className='tile is-parent is-vertical is-12'>
+          { blocks.map(this.renderBlock) }
+        </div>
       </div>
     );
   }
@@ -17,7 +19,13 @@ class BlockList extends React.Component {
 
   renderBlock(block) {
     return (
-      <BlockItem key={block.id} block={block} />
+      <Link
+        to={`/block/${block.hash}`}
+        block-id={block.id}
+        key={block.id}
+        className='block-list-item tile is-child is-12 notification is-dark'>
+          {block.hash}
+      </Link>
     );
   }
 
