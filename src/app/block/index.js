@@ -1,8 +1,10 @@
 import React  from 'react'
+import {Link} from 'react-router-dom'
 
 import Title        from 'components/title'
 import RawDisplay   from 'components/raw-display'
 import BlockService from 'services/block'
+import utils        from 'lib/utils'
 
 
 class Block extends React.Component {
@@ -12,11 +14,29 @@ class Block extends React.Component {
   }
 
   componentDidMount() {
+    this.fetchData();
+  }
+
+  componentDidUpdate(prevProps) {
+    const prev    = prevProps.match.params.hash;
+    const current = this.props.match.params.hash;
+
+    if (prev !== current)
+      this.fetchData();
+  }
+
+
+  fetchData() {
     const {hash} = this.props.match.params;
 
     BlockService
       .get(hash)
       .then((r) => this.setState(r));
+  }
+
+
+  typeIs(type) {
+    return (this.state.type === type);
   }
 
 
@@ -46,13 +66,13 @@ class Block extends React.Component {
   renderData(block) {
     return (
       <ul>
-        <RawDisplay name='Hash' value={block.hash} />
-        <RawDisplay name='Type' value={block.type} />
-        <RawDisplay name='Timestamp' value={block.timestamp} />
-        <RawDisplay name='Position' value={block.id} />
-        <RawDisplay name='Previous' value={block.prev} />
-        <RawDisplay name='Signature' value={block.signature} />
-        <RawDisplay name='Creator' value={block.creator} />
+        <RawDisplay name='Hash'       value={block.hash} />
+        <RawDisplay name='Type'       value={block.type} />
+        <RawDisplay name='Timestamp'  value={block.timestamp} />
+        <RawDisplay name='Position'   value={block.id} />
+        <RawDisplay name='Previous'   value={block.prev} />
+        <RawDisplay name='Signature'  value={block.signature} />
+        <RawDisplay name='Creator'    value={block.creator} />
       </ul>
     );
   }
@@ -61,9 +81,15 @@ class Block extends React.Component {
   renderSidebar(block) {
     return (
       <div>
-        <a className='notification is-primary is-block'>
-          Download
-        </a>
+        { utils.renderIf(
+            this.typeIs('file_create'),
+            <a className='notification is-primary is-block'>Download File</a>
+        )}
+
+        { utils.renderIf(
+            !this.typeIs('zero'),
+            <Link className='notification is-info is-block' to={`/block/${block.prev}`}>Previous Block</Link>
+        )}
       </div>
     );
   }
