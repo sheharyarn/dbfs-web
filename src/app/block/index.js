@@ -1,16 +1,20 @@
 import React  from 'react'
 import {Link} from 'react-router-dom'
+import utils  from 'lib/utils'
 
-import Title        from 'components/title'
-import RawDisplay   from 'components/raw-display'
-import BlockService from 'services/block'
-import utils        from 'lib/utils'
+import Title         from 'components/title'
+import RawDisplay    from 'components/raw-display'
+import BlockService  from 'services/block'
+import BlockDownload from 'app/block/block-download'
+
 
 
 class Block extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+
+    this.state = {downloading: false};
+    this.showDialog = this.showDialog.bind(this);
   }
 
   componentDidMount() {
@@ -79,19 +83,40 @@ class Block extends React.Component {
 
 
   renderSidebar(block) {
+    const {downloading} = this.state;
+
     return (
       <div>
         { utils.renderIf(
             this.typeIs('file_create'),
-            <a className='notification is-primary is-block'>Download File</a>
+            <a
+              className='notification is-primary is-block'
+              onClick={() => this.showDialog(true)}>
+                Download File
+            </a>
         )}
 
         { utils.renderIf(
             !this.typeIs('zero'),
-            <Link className='notification is-info is-block' to={`/block/${block.prev}`}>Previous Block</Link>
+            <Link
+              className='notification is-info is-block'
+              to={`/block/${block.prev}`}>
+                Previous Block
+            </Link>
         )}
+
+        <BlockDownload
+          block={block}
+          active={downloading}
+          onClose={() => this.showDialog(false)}
+        />
       </div>
     );
+  }
+
+
+  showDialog(bool) {
+    this.setState({downloading: bool});
   }
 
 }
