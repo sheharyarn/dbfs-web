@@ -91,7 +91,7 @@ class Block extends React.Component {
         { utils.renderIf(
             this.typeIs('file_create'),
             <a
-              className='notification is-primary is-block'
+              className='notification is-dark is-block'
               onClick={() => this.showDialog(true)}>
                 Download File
             </a>
