@@ -1,4 +1,5 @@
 import React from 'react'
+import DBFS  from 'lib/dbfs'
 
 
 class BlockDownload extends React.Component {
@@ -6,6 +7,19 @@ class BlockDownload extends React.Component {
     block: null,
     active: false,
     onClose: () => {},
+  }
+
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      privateKey: '',
+      busy: false,
+    };
+
+    this.download     = this.download.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
 
@@ -36,9 +50,11 @@ class BlockDownload extends React.Component {
 
   renderForm() {
     const {block} = this.props;
+    const {privateKey} = this.state;
 
     return (
       <div className='box'>
+
         <h3 className='title is-5'>Download {block.data.file_name}</h3>
         <hr className='title-line' />
 
@@ -47,16 +63,36 @@ class BlockDownload extends React.Component {
           <div className="control">
             <textarea
               className="textarea key-box"
+              value={privateKey}
+              onChange={this.handleChange}
               placeholder="Enter your Private Key to download and decrypt the file">
             </textarea>
           </div>
         </div>
 
         <div className="control">
-          <button className="button is-primary">Download</button>
+          <button
+            onClick={this.download}
+            className="button is-primary">
+              Download
+          </button>
         </div>
+
       </div>
     );
+  }
+
+
+  download() {
+    const {privateKey} = this.state;
+    const {block} = this.props;
+
+    alert(DBFS.isOwner(block, privateKey));
+  }
+
+
+  handleChange(e) {
+    this.setState({ privateKey: e.target.value });
   }
 
 }
