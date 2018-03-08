@@ -3,14 +3,11 @@
 // --------------
 
 
-import Utils from 'lib/utils'
-
-
 
 // Hashing
 
 const sha256 = function(text) {
-  return KJUR.crypto.Util.sha256(text);
+  return window.KJUR.crypto.Util.sha256(text);
 }
 
 
@@ -27,8 +24,8 @@ const decode64 = function(text) { return atob(text); }
 // Base 16 Encoding
 
 const encode16 = function(text) {
-  const text = text.replace(/\r/g, '');
-  const digits = "0123456789ABCDEF";
+  var text = text.replace(/\r/g, '');
+  var digits = "0123456789ABCDEF";
   var hex = "";
 
   for (var i = 0; i < text.length; i++) {
@@ -54,19 +51,19 @@ const decode16 = function(text) {
 
 // RSA
 
-const parsePrivateKey = function(pemString) {
-  var rsa = new RSAKey();
+const parsePrivateKey = function(pem) {
+  var rsa = new window.RSAKey();
   rsa.readPrivateKeyFromPEMString(pem);
   return rsa;
 }
 
 const getPublicKey = function(rsa) {
-  var pub = KEYUTIL.getKey({n: rsa.n, e: rsa.e});
+  var pub = window.KEYUTIL.getKey({n: rsa.n, e: rsa.e});
   return keyToString(pub);
 }
 
 const keyToString = function(key) {
-  return KEYUTIL.getPEM(key);
+  return window.KEYUTIL.getPEM(key);
 }
 
 
