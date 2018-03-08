@@ -15,10 +15,12 @@ const sha256 = function(text) {
 
 
 
+
 // Base 64 Encoding
 
 const encode64 = function(text) { return btoa(text); }
 const decode64 = function(text) { return atob(text); }
+
 
 
 
@@ -50,16 +52,34 @@ const decode16 = function(text) {
 
 
 
+// RSA
+
+const parsePrivateKey = function(pemString) {
+  var rsa = new RSAKey();
+  rsa.readPrivateKeyFromPEMString(pem);
+  return rsa;
+}
+
+const getPublicKey = function(rsa) {
+  var pub = KEYUTIL.getKey({n: rsa.n, e: rsa.e});
+  return keyToString(pub);
+}
+
+const keyToString = function(key) {
+  return KEYUTIL.getPEM(key);
+}
+
 
 
 // Export
 
 const Crypto = {
   sha256,
-  encode64,
-  decode64,
-  encode16,
-  decode16,
+
+  encode64, decode64,
+  encode16, decode16,
+
+  parsePrivateKey, getPublicKey, keyToString,
 };
 
 
