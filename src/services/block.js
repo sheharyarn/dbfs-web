@@ -10,8 +10,19 @@ function get(hash) {
 }
 
 
+// GET: Block File
+function getFile(hash) {
+  return request({
+    url:    `/blocks/${hash}/file`,
+    method: 'GET'
+  }).then((data) => {
+    return data.file;
+  })
+}
+
+
 const BlockService = {
-  get,
+  get, getFile,
 }
 
 export default BlockService;

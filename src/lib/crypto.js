@@ -66,6 +66,13 @@ const keyToString = function(key) {
   return window.KEYUTIL.getPEM(key);
 }
 
+const decryptFile = function(file, pem) {
+  // TODO:
+  // Decode file, decrypt and encode again
+  //const pvtKey = parsePrivateKey(pem);
+  return file;
+}
+
 
 
 // Export
@@ -76,7 +83,7 @@ const Crypto = {
   encode64, decode64,
   encode16, decode16,
 
-  parsePrivateKey, getPublicKey, keyToString,
+  parsePrivateKey, getPublicKey, keyToString, decryptFile,
 };
 
 
