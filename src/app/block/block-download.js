@@ -1,5 +1,6 @@
 import React from 'react'
 import DBFS  from 'lib/dbfs'
+import BlockService from 'services/block'
 
 
 class BlockDownload extends React.Component {
@@ -19,6 +20,7 @@ class BlockDownload extends React.Component {
     };
 
     this.close        = this.close.bind(this);
+    this.setBusy      = this.setBusy.bind(this);
     this.download     = this.download.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
@@ -91,7 +93,19 @@ class BlockDownload extends React.Component {
     const {block} = this.props;
 
     if (DBFS.isOwner(block, privateKey)) {
-      this.setState({busy: true});
+      this.setBusy(true);
+
+      BlockService
+        .getFile(block.hash)
+        .then((f) => DBFS.decryptDownload(block, f, privateKey))
+        .then(() => {
+          this.setBusy(false);
+          this.close();
+        })
+        .catch((err) => {
+          console.error(err);
+          this.setBusy(false);
+        })
 
 
     } else {
@@ -108,6 +122,10 @@ class BlockDownload extends React.Component {
   close() {
     if (!this.state.busy)
       this.props.onClose();
+  }
+
+  setBusy(busy) {
+    this.setState({ busy });
   }
 
 }
