@@ -18,18 +18,19 @@ class BlockDownload extends React.Component {
       busy: false,
     };
 
+    this.close        = this.close.bind(this);
     this.download     = this.download.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
 
   render() {
-    const {active, block, onClose} = this.props;
+    const {active, block} = this.props;
 
     if (block && block.data && block.data.file_name)
       return (
         <div className={`modal ${ active ? 'is-active' : ''}`}>
-          <div className='modal-background' onClick={onClose}></div>
+          <div className='modal-background' onClick={this.close}></div>
 
           <div className='modal-content'>
             { this.renderForm() }
@@ -38,7 +39,7 @@ class BlockDownload extends React.Component {
           <button
             className='modal-close is-large'
             aria-label='close'
-            onClick={onClose}
+            onClick={this.close}
           ></button>
         </div>
       )
@@ -50,7 +51,7 @@ class BlockDownload extends React.Component {
 
   renderForm() {
     const {block} = this.props;
-    const {privateKey} = this.state;
+    const {busy, privateKey} = this.state;
 
     return (
       <div className='box'>
@@ -65,6 +66,7 @@ class BlockDownload extends React.Component {
               className="textarea key-box"
               value={privateKey}
               onChange={this.handleChange}
+              disabled={busy}
               placeholder="Enter your Private Key to download and decrypt the file">
             </textarea>
           </div>
@@ -73,7 +75,8 @@ class BlockDownload extends React.Component {
         <div className="control">
           <button
             onClick={this.download}
-            className="button is-primary">
+            disabled={busy}
+            className={`button is-primary ${busy ? 'is-loading' : ''}`}>
               Download
           </button>
         </div>
@@ -87,12 +90,24 @@ class BlockDownload extends React.Component {
     const {privateKey} = this.state;
     const {block} = this.props;
 
-    alert(DBFS.isOwner(block, privateKey));
+    if (DBFS.isOwner(block, privateKey)) {
+      this.setState({busy: true});
+
+
+    } else {
+      alert("Entered Key does not match block owner's");
+    }
   }
 
 
   handleChange(e) {
     this.setState({ privateKey: e.target.value });
+  }
+
+
+  close() {
+    if (!this.state.busy)
+      this.props.onClose();
   }
 
 }
