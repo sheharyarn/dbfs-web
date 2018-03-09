@@ -2,6 +2,7 @@ import React       from 'react'
 import NodeService from 'services/node'
 
 import BlockList   from 'app/home/block-list'
+import BlockCreate from 'app/home/block-create'
 import Title       from 'components/title'
 import BulletInfo  from 'components/bullet-info'
 
@@ -16,7 +17,10 @@ class Home extends React.Component {
       count: 0,
       nodes: [],
       recent: {entries: []},
+      uploading: false,
     };
+
+    this.showDialog = this.showDialog.bind(this);
   }
 
 
@@ -28,7 +32,8 @@ class Home extends React.Component {
 
 
   render() {
-    const {recent, status, count, nodes} = this.state;
+    const {recent, status, count, nodes, uploading} = this.state;
+
     return (
       <div className='columns'>
         <div className='column is-two-thirds'>
@@ -38,7 +43,6 @@ class Home extends React.Component {
 
         <div className='column'>
           <Title value='Blockchain Information' />
-
           <ul>
             <BulletInfo name='App Status'    value={status} />
             <BulletInfo name='No. of Blocks' value={count} />
@@ -52,6 +56,20 @@ class Home extends React.Component {
           <ul>
             { nodes.map(this.renderNode) }
           </ul>
+
+          <hr/>
+
+          <a
+            className='notification is-info is-block'
+            onClick={() => this.showDialog(true)}>
+              Upload File
+          </a>
+
+          <BlockCreate
+            lastBlock={recent.entries[0]}
+            active={uploading}
+            onClose={() => this.showDialog(false)}
+          />
         </div>
       </div>
     )
@@ -64,6 +82,11 @@ class Home extends React.Component {
         {node.name} <span>({node.sync}%)</span>
       </li>
     );
+  }
+
+
+  showDialog(bool) {
+    this.setState({uploading: bool});
   }
 
 }
