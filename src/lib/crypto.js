@@ -18,6 +18,30 @@ const sha256 = function(text) {
 const encode64 = function(text) { return btoa(text); }
 const decode64 = function(text) { return atob(text); }
 
+const decode64Blob = function(b64Data, contentType, sliceSize) {
+  contentType = contentType || '';
+  sliceSize = sliceSize || 512;
+
+  var byteCharacters = atob(b64Data);
+  var byteArrays = [];
+
+  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+    var byteNumbers = new Array(slice.length);
+    for (var i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    var byteArray = new Uint8Array(byteNumbers);
+
+    byteArrays.push(byteArray);
+  }
+
+  var blob = new Blob(byteArrays, {type: contentType});
+  return blob;
+}
+
 
 
 
@@ -80,8 +104,8 @@ const decryptFile = function(file, pem) {
 const Crypto = {
   sha256,
 
-  encode64, decode64,
   encode16, decode16,
+  encode64, decode64, decode64Blob,
 
   parsePrivateKey, getPublicKey, keyToString, decryptFile,
 };
