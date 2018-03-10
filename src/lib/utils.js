@@ -3,6 +3,10 @@
 // -----------------
 
 
+import _ from 'lodash'
+
+
+
 const renderIf = function(cond, then, other) {
   if (cond)
     return then;
@@ -54,6 +58,30 @@ const readFile = function(file, onRead) {
 }
 
 
+const timestamp = function() {
+  return (new Date()).toISOString();
+}
+
+
+const encodeJSON = function(object, fields) {
+  if (_.isPlainObject(object)) {
+    object = (fields ? pluck(object, fields) : object);
+
+    var encoded =
+      Object
+      .keys(object)
+      .sort()
+      .map((k) => encodeJSON(k) + ':' + encodeJSON(object[k]))
+      .join(',');
+
+    return ('{' + encoded + '}');
+
+  } else {
+    return JSON.stringify(object);
+  }
+};
+
+
 
 // Export
 
@@ -64,6 +92,8 @@ const utils = {
   pluck,
   canReadFiles,
   readFile,
+  timestamp,
+  encodeJSON,
 };
 
 
