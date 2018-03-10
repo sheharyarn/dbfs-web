@@ -26,14 +26,6 @@ const fromUTF8 = function(string) {
 
 
 
-const pluck = function(source, keys) {
-  var object = {};
-  keys.forEach((key) => { object[key] = source[key]; });
-  return object;
-}
-
-
-
 const canReadFiles = function() {
   return !!(window.File && window.FileReader && window.FileList && window.Blob);
 }
@@ -65,7 +57,7 @@ const timestamp = function() {
 
 const encodeJSON = function(object, fields) {
   if (_.isPlainObject(object)) {
-    object = (fields ? pluck(object, fields) : object);
+    object = (fields ? _.pick(object, fields) : object);
 
     var encoded =
       Object
@@ -89,7 +81,6 @@ const utils = {
   renderIf,
   toUTF8,
   fromUTF8,
-  pluck,
   canReadFiles,
   readFile,
   timestamp,
