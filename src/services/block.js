@@ -22,7 +22,7 @@ function getFile(hash) {
 
 
 // POST: Insert new Block
-function create(block, file) {
+function create({block, file}) {
   return request({
     url:    `/blocks`,
     method: 'POST',
