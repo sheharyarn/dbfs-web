@@ -11,7 +11,7 @@ import Utils from 'lib/utils'
 // Hashing
 
 const sha256 = function(text) {
-  return window.KJUR.crypto.Util.sha256(text);
+  return window.KJUR.crypto.Util.sha256(text).toUpperCase();
 }
 
 
