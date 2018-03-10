@@ -29,6 +29,32 @@ const pluck = function(source, keys) {
 }
 
 
+
+const canReadFiles = function() {
+  return !!(window.File && window.FileReader && window.FileList && window.Blob);
+}
+
+
+const readFile = function(file, onRead) {
+  if (onRead && file && canReadFiles()) {
+    var reader = new FileReader();
+
+    reader.onerror = function(ev) {
+      console.error("Unable to read file: ", file);
+    };
+
+    reader.onload = function(ev) {
+      var filedata = file;
+      filedata.data = ev.target.result;
+      onRead(filedata);
+    };
+
+    reader.readAsBinaryString(file);
+  }
+}
+
+
+
 // Export
 
 const utils = {
@@ -36,6 +62,8 @@ const utils = {
   toUTF8,
   fromUTF8,
   pluck,
+  canReadFiles,
+  readFile,
 };
 
 

@@ -7,7 +7,7 @@ class FilePicker extends React.Component {
     label: 'Select a File',
     file: null,
     onRead: null,
-    onSelect: () => {},
+    onSelect: null,
   }
 
 
@@ -26,21 +26,8 @@ class FilePicker extends React.Component {
       onSelect(file);
 
 
-    if (onRead && file && utils.canReadFiles()) {
-      var reader = new FileReader();
-
-      reader.onerror = function(ev) {
-        console.error("Unable to read file: ", file);
-      };
-
-      reader.onload = function(ev) {
-        var filedata = file;
-        filedata.data = ev.target.result;
-        onRead(filedata);
-      };
-
-      reader.readAsBinaryString(file);
-    }
+    if (onRead && file)
+      utils.readFile(file, onRead);
   }
 
 
