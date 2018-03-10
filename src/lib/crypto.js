@@ -3,6 +3,10 @@
 // --------------
 
 
+import _     from 'lodash'
+import Utils from 'lib/utils'
+
+
 
 // Hashing
 
@@ -90,12 +94,55 @@ const keyToString = function(key) {
   return window.KEYUTIL.getPEM(key);
 }
 
+
+
+
+// Files
+
 const decryptFile = function(file, pem) {
   // TODO:
   // Decode file, decrypt and encode again
   //const pvtKey = parsePrivateKey(pem);
   return file;
 }
+
+const encryptFile = function(filedata, pem) {
+  // TODO;
+  // Do actual encryption here before encoding
+  return encode64(filedata);
+}
+
+
+
+
+// Blocks
+
+const fields = {
+  sign: ['data', 'type', 'prev', 'timestamp'],
+  hash: ['data', 'type', 'prev', 'timestamp', 'creator', 'signature']
+};
+
+const signBlock = function(block, pem) {
+  var block = _.clone(block);
+  var json  = Utils.encodeJSON(block, fields.sign);
+  var rsa   = parsePrivateKey(pem);
+  var pub   = getPublicKey(rsa);
+
+  block.signature = rsa.sign(json, 'sha256').toUpperCase();
+  block.creator = Crypto.encode16(pub);
+
+  return block;
+}
+
+const hashBlock = function(block) {
+  var block = _.clone(block);
+  var json  = Utils.encodeJSON(block, fields.hash);
+
+  block.hash = sha256(json);
+
+  return block;
+}
+
 
 
 
@@ -107,7 +154,9 @@ const Crypto = {
   encode16, decode16,
   encode64, decode64, decode64Blob,
 
-  parsePrivateKey, getPublicKey, keyToString, decryptFile,
+  parsePrivateKey, getPublicKey, keyToString,
+  encryptFile, decryptFile,
+  signBlock, hashBlock,
 };
 
 
