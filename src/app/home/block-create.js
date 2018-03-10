@@ -110,9 +110,17 @@ class BlockCreate extends React.Component {
 
         BlockService
           .create(blockWithFile)
-          .then(() => alert('success'))
-          .catch((err) => alert('error!'))
+          .then(() => {
+            this.setBusy(false);
+            this.close();
+            window.location.reload();
+          })
+          .catch((err) => {
+            this.setBusy(false);
+            alert('Error!');
+          })
       });
+
     } else {
       alert('Fill required fields first');
     }
