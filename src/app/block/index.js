@@ -75,7 +75,7 @@ class Block extends React.Component {
         <RawDisplay name='Timestamp'  value={block.timestamp} />
         <RawDisplay name='Position'   value={block.id} />
         <RawDisplay name='Previous'   value={block.prev} />
-        <RawDisplay name='Metadata'   value={JSON.stringify(block.data)} />
+        <RawDisplay name='Metadata'   value={utils.prettyJSON(block.data)} />
         <RawDisplay name='Signature'  value={block.signature} />
         <RawDisplay name='Creator'    value={block.creator} />
       </ul>

@@ -74,6 +74,11 @@ const encodeJSON = function(object, fields) {
 };
 
 
+const prettyJSON = function(object) {
+  return JSON.stringify(object, null, 2);
+}
+
+
 
 // Export
 
@@ -85,6 +90,7 @@ const utils = {
   readFile,
   timestamp,
   encodeJSON,
+  prettyJSON,
 };
 
 
