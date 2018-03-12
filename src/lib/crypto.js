@@ -97,6 +97,18 @@ const keyToString = function(key) {
 
 
 
+// AES
+
+const newAESKey = function () {
+  const salt = window.CryptoJS.lib.WordArray.random(128/8);
+  const pass = window.CryptoJS.lib.WordArray.random(128/8);
+
+  return window.CryptoJS.PBKDF2(pass, salt, { keySize: 256/32 }).toString();
+}
+
+
+
+
 // Files
 
 const decryptFile = function(file, pem) {
