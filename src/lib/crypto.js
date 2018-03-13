@@ -94,34 +94,42 @@ const keyToString = function(key) {
   return window.KEYUTIL.getPEM(key);
 }
 
+const encryptRSA = function(pem, string) {
+  const rsa = parsePrivateKey(pem);
+  return encode64(rsa.encrypt(string));
+}
+
+const decryptRSA = function(pem, string) {
+  const rsa = parsePrivateKey(pem);
+  return rsa.decrypt(decode64(string));
+}
+
 
 
 
 // AES
 
 const newAESKey = function () {
-  const salt = window.CryptoJS.lib.WordArray.random(128/8);
   const pass = window.CryptoJS.lib.WordArray.random(128/8);
+  const salt = window.CryptoJS.lib.WordArray.random(128/8);
 
   return window.CryptoJS.PBKDF2(pass, salt, { keySize: 256/32 }).toString();
 }
 
 
 
-
 // Files
 
 const decryptFile = function(file, pem) {
+  console.log(file);
   // TODO:
   // Decode file, decrypt and encode again
   //const pvtKey = parsePrivateKey(pem);
   return file;
 }
 
-const encryptFile = function(filedata, pem) {
-  // TODO;
-  // Do actual encryption here before encoding
-  return encode64(filedata);
+const encryptFile = function(file, key) {
+  return encode64( encryptAES(file, key) );
 }
 
 
@@ -167,6 +175,10 @@ const Crypto = {
   encode64, decode64, decode64Blob,
 
   parsePrivateKey, getPublicKey, keyToString,
+  encryptRSA, decryptRSA,
+
+  newAESKey, encryptAES, decryptAES,
+
   encryptFile, decryptFile,
   signBlock, hashBlock,
 };
