@@ -116,6 +116,15 @@ const newAESKey = function () {
   return window.CryptoJS.PBKDF2(pass, salt, { keySize: 256/32 }).toString();
 }
 
+const encryptAES = function(string, key) {
+  return window.CryptoJS.AES.encrypt(string, key);
+}
+
+const decryptAES = function(string, key) {
+  return window.CryptoJS.AES.decrypt(string, key);
+}
+
+
 
 
 // Files
