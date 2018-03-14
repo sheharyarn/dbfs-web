@@ -32,7 +32,8 @@ const decryptDownload = function(block, file, pem) {
 
 
 const createBlock = function(prevHash, file, pem) {
-  const encrypted = Crypto.encryptFile(file.data, pem);
+  const fileKey   = Crypto.newAESKey();
+  const encrypted = Crypto.encryptFile(file.data, fileKey);
 
   const block = {
     type: 'file_create',
@@ -43,6 +44,7 @@ const createBlock = function(prevHash, file, pem) {
       file_type: file.type,
       file_size: file.size,
       file_hash: Crypto.sha256(encrypted),
+      file_key:  Crypto.encryptRSA(pem, fileKey),
     }
   };
 
