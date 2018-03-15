@@ -117,11 +117,11 @@ const newAESKey = function () {
 }
 
 const encryptAES = function(string, key) {
-  return window.CryptoJS.AES.encrypt(string, key);
+  return window.CryptoJS.AES.encrypt(string, key).toString();
 }
 
 const decryptAES = function(string, key) {
-  return window.CryptoJS.AES.decrypt(string, key);
+  return window.CryptoJS.AES.decrypt(string, key).toString(window.CryptoJS.enc.Utf8);
 }
 
 
@@ -129,16 +129,17 @@ const decryptAES = function(string, key) {
 
 // Files
 
-const decryptFile = function(file, pem) {
-  console.log(file);
-  // TODO:
-  // Decode file, decrypt and encode again
-  //const pvtKey = parsePrivateKey(pem);
-  return file;
+// Decodes the B64 file, decrypts, encodes back to B64
+const decryptFile = function(file, key) {
+  const decoded   = decode64(file);
+  const decrypted = decryptAES(decoded, key);
+
+  return encode64(decrypted);
 }
 
+// Takes raw file bytes, encrypts, and encodes to B64
 const encryptFile = function(file, key) {
-  return encode64( encryptAES(file, key) );
+  return encode64(encryptAES(file, key));
 }
 
 
