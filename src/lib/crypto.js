@@ -109,20 +109,36 @@ const decryptRSA = function(pem, string) {
 
 // AES
 
-const newAESKey = function () {
-  const pass = window.CryptoJS.lib.WordArray.random(128/8);
-  const salt = window.CryptoJS.lib.WordArray.random(128/8);
+const AES = {
 
-  return window.CryptoJS.PBKDF2(pass, salt, { keySize: 256/32 }).toString();
-}
+  /**
+   * Generate a strong 256-bit AES key
+   */
+  newKey: function() {
+    const pass = window.CryptoJS.lib.WordArray.random(128/8);
+    const salt = window.CryptoJS.lib.WordArray.random(128/8);
 
-const encryptAES = function(string, key) {
-  return window.CryptoJS.AES.encrypt(string, key).toString();
-}
+    return window.CryptoJS.PBKDF2(pass, salt, { keySize: 256/32 }).toString();
+  },
 
-const decryptAES = function(string, key) {
-  return window.CryptoJS.AES.decrypt(string, key).toString(window.CryptoJS.enc.Utf8);
-}
+
+  /**
+   * Encrypt a string using AES
+   */
+  encrypt: function(string, key) {
+    return window.CryptoJS.AES.encrypt(string, key).toString();
+  },
+
+
+  /**
+   * Decrypt a string back to UTF-8
+   */
+  decrypt: function(string, key) {
+    return window.CryptoJS.AES.decrypt(string, key).toString(window.CryptoJS.enc.Utf8);
+  },
+};
+
+
 
 
 
@@ -132,14 +148,14 @@ const decryptAES = function(string, key) {
 // Decodes the B64 file, decrypts, encodes back to B64
 const decryptFile = function(file, key) {
   const decoded   = decode64(file);
-  const decrypted = decryptAES(decoded, key);
+  const decrypted = AES.decrypt(decoded, key);
 
   return encode64(decrypted);
 }
 
 // Takes raw file bytes, encrypts, and encodes to B64
 const encryptFile = function(file, key) {
-  return encode64(encryptAES(file, key));
+  return encode64(AES.encrypt(file, key));
 }
 
 
@@ -187,7 +203,7 @@ const Crypto = {
   parsePrivateKey, getPublicKey, keyToString,
   encryptRSA, decryptRSA,
 
-  newAESKey, encryptAES, decryptAES,
+  AES,
 
   encryptFile, decryptFile,
   signBlock, hashBlock,

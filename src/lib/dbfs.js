@@ -33,7 +33,7 @@ const decryptDownload = function(block, file, pem) {
 
 
 const createBlock = function(prevHash, file, pem) {
-  const fileKey   = Crypto.newAESKey();
+  const fileKey   = Crypto.AES.newKey();
   const encrypted = Crypto.encryptFile(file.data, fileKey);
 
   const block = {
