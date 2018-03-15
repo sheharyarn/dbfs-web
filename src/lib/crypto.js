@@ -51,29 +51,38 @@ const decode64Blob = function(b64Data, contentType, sliceSize) {
 
 // Base 16 Encoding
 
-const encode16 = function(text) {
-  var text = text.replace(/\r/g, '');
-  var digits = "0123456789ABCDEF";
-  var hex = "";
 
-  for (var i = 0; i < text.length; i++) {
-    const hc = (text.charCodeAt(i) >>> 4) & 0x0F;
-    const lc = text.charCodeAt(i) & 0x0F;
-    hex += digits[hc];
-    hex += digits[lc];
-  }
+const Base16 = {
+  /**
+   * Encode in Base 16
+   */
+  encode: function(text) {
+    var text = text.replace(/\r/g, '');
+    var digits = "0123456789ABCDEF";
+    var hex = "";
 
-  return hex;
-}
+    for (var i = 0; i < text.length; i++) {
+      const hc = (text.charCodeAt(i) >>> 4) & 0x0F;
+      const lc = text.charCodeAt(i) & 0x0F;
+      hex += digits[hc];
+      hex += digits[lc];
+    }
 
-const decode16 = function(text) {
-  var s = '';
-  for (var i = 0; i < text.length; i+=2) {
-    s += String.fromCharCode(parseInt(text.substr(i, 2), 16));
-  }
-  return decodeURIComponent(escape(s));
-}
+    return hex;
+  },
 
+
+  /**
+   * Decode Base 16
+   */
+  decode: function(text) {
+    var s = '';
+    for (var i = 0; i < text.length; i+=2) {
+      s += String.fromCharCode(parseInt(text.substr(i, 2), 16));
+    }
+    return decodeURIComponent(escape(s));
+  },
+};
 
 
 
@@ -175,7 +184,7 @@ const signBlock = function(block, pem) {
   var pub   = getPublicKey(rsa);
 
   block.signature = rsa.sign(json, 'sha256').toUpperCase();
-  block.creator = Crypto.encode16(pub);
+  block.creator = Crypto.Base16.encode(pub);
 
   return block;
 }
@@ -197,7 +206,7 @@ const hashBlock = function(block) {
 const Crypto = {
   sha256,
 
-  encode16, decode16,
+  Base16,
   encode64, decode64, decode64Blob,
 
   parsePrivateKey, getPublicKey, keyToString,

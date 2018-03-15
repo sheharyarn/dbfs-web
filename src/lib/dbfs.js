@@ -12,7 +12,7 @@ const isOwner = function(block, pem) {
   try {
     const pvtKey  = Crypto.parsePrivateKey(pem);
     const pubKey  = Crypto.getPublicKey(pvtKey);
-    const encoded = Crypto.encode16(pubKey);
+    const encoded = Crypto.Base16.encode(pubKey);
 
     return (encoded == block.creator);
 
