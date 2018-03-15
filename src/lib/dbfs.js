@@ -10,8 +10,8 @@ import FileSaver from 'file-saver'
 
 const isOwner = function(block, pem) {
   try {
-    const pvtKey  = Crypto.parsePrivateKey(pem);
-    const pubKey  = Crypto.getPublicKey(pvtKey);
+    const pvtKey  = Crypto.RSA.parsePrivateKey(pem);
+    const pubKey  = Crypto.RSA.getPublicKey(pvtKey);
     const encoded = Crypto.Base16.encode(pubKey);
 
     return (encoded == block.creator);
@@ -24,7 +24,7 @@ const isOwner = function(block, pem) {
 
 
 const decryptDownload = function(block, file, pem) {
-  const file_key  = Crypto.decryptRSA(pem, block.data.file_key);
+  const file_key  = Crypto.RSA.decrypt(pem, block.data.file_key);
   const decrypted = Crypto.decryptFile(file, file_key);
   const file_blob = Crypto.Base64.decodeBlob(decrypted);
 
@@ -45,7 +45,7 @@ const createBlock = function(prevHash, file, pem) {
       file_type: file.type,
       file_size: file.size,
       file_hash: Crypto.sha256(encrypted),
-      file_key:  Crypto.encryptRSA(pem, fileKey),
+      file_key:  Crypto.RSA.encrypt(pem, fileKey),
     }
   };
 

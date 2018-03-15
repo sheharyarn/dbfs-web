@@ -113,33 +113,57 @@ const Base16 = {
 
 
 
-// RSA
 
-const parsePrivateKey = function(pem) {
-  var rsa = new window.RSAKey();
-  rsa.readPrivateKeyFromPEMString(pem);
-  return rsa;
-}
 
-const getPublicKey = function(rsa) {
-  var pub = window.KEYUTIL.getKey({n: rsa.n, e: rsa.e});
-  return keyToString(pub);
-}
 
-const keyToString = function(key) {
-  return window.KEYUTIL.getPEM(key);
-}
+/**
+ * RSA Utilities
+ *
+ *
+ * Exports:
+ *  - parsePrivateKey
+ *  - getPublicKey
+ *  - toPEM
+ *  - encrypt
+ *  - decrypt
+ */
+const RSA = {
 
-const encryptRSA = function(pem, string) {
-  const rsa = parsePrivateKey(pem);
-  return Base64.encode(rsa.encrypt(string));
-}
+  // Parses a Private Key PEM into an RSA object
+  parsePrivateKey: function(pem) {
+    var rsa = new window.RSAKey();
+    rsa.readPrivateKeyFromPEMString(pem);
+    return rsa;
+  },
 
-const decryptRSA = function(pem, string) {
-  const rsa = parsePrivateKey(pem);
-  return rsa.decrypt(Base64.decode(string));
-}
 
+  // Returns a Public Key PEM of the passed RSA object
+  getPublicKey: function(rsa) {
+    const pub = window.KEYUTIL.getKey({n: rsa.n, e: rsa.e});
+    return RSA.toPEM(pub);
+  },
+
+
+  // Gets the PEM of an RSA object
+  toPEM: function(key) {
+    return window.KEYUTIL.getPEM(key);
+  },
+
+
+  // Encrypts using RSA, then encodes into B64
+  encrypt: function(pem, string) {
+    const rsa = RSA.parsePrivateKey(pem);
+    return Base64.encode(rsa.encrypt(string));
+  },
+
+
+  // Decodes using B64, then decrypts via RSA
+  decrypt: function(pem, string) {
+    const rsa = RSA.parsePrivateKey(pem);
+    return rsa.decrypt(Base64.decode(string));
+  },
+
+};
 
 
 
@@ -210,8 +234,8 @@ const fields = {
 const signBlock = function(block, pem) {
   var block = _.clone(block);
   var json  = Utils.encodeJSON(block, fields.sign);
-  var rsa   = parsePrivateKey(pem);
-  var pub   = getPublicKey(rsa);
+  var rsa   = RSA.parsePrivateKey(pem);
+  var pub   = RSA.getPublicKey(rsa);
 
   block.signature = rsa.sign(json, 'sha256').toUpperCase();
   block.creator = Crypto.Base16.encode(pub);
@@ -236,13 +260,9 @@ const hashBlock = function(block) {
 const Crypto = {
   sha256,
 
-  Base16,
-  Base64,
+  Base16, Base64,
 
-  parsePrivateKey, getPublicKey, keyToString,
-  encryptRSA, decryptRSA,
-
-  AES,
+  RSA, AES,
 
   encryptFile, decryptFile,
   signBlock, hashBlock,
