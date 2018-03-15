@@ -17,45 +17,74 @@ const sha256 = function(text) {
 
 
 
-// Base 64 Encoding
 
-const encode64 = function(text) { return btoa(text); }
-const decode64 = function(text) { return atob(text); }
 
-const decode64Blob = function(b64Data, contentType, sliceSize) {
-  contentType = contentType || '';
-  sliceSize = sliceSize || 512;
+/**
+ * Base64 Encoding Utilities
+ *
+ *
+ * Exports:
+ *  - encode:     Encode to Base64
+ *  - decode:     Decode from Base64
+ *  - decodeBlob: Decode Base64 data into a raw blob
+ */
+const Base64 = {
 
-  var byteCharacters = atob(b64Data);
-  var byteArrays = [];
+  // Encode B64
+  encode: function(text) {
+    return btoa(text);
+  },
 
-  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-    var slice = byteCharacters.slice(offset, offset + sliceSize);
 
-    var byteNumbers = new Array(slice.length);
-    for (var i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i);
+  // Decode B64
+  decode: function(text) {
+    return atob(text);
+  },
+
+
+  // Decode B64 into blob
+  decodeBlob: function(b64Data, contentType, sliceSize) {
+    contentType = contentType || '';
+    sliceSize = sliceSize || 512;
+
+    var byteCharacters = atob(b64Data);
+    var byteArrays = [];
+
+    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+      var byteNumbers = new Array(slice.length);
+      for (var i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      var byteArray = new Uint8Array(byteNumbers);
+
+      byteArrays.push(byteArray);
     }
 
-    var byteArray = new Uint8Array(byteNumbers);
+    var blob = new Blob(byteArrays, {type: contentType});
+    return blob;
+  },
 
-    byteArrays.push(byteArray);
-  }
-
-  var blob = new Blob(byteArrays, {type: contentType});
-  return blob;
-}
+};
 
 
 
 
-// Base 16 Encoding
 
 
+/**
+ * Base16 Encoding Utilities
+ *
+ *
+ * Exports:
+ *  - encode: Encode to Base64
+ *  - decode: Decode from Base64
+ */
 const Base16 = {
-  /**
-   * Encode in Base 16
-   */
+
+  // Encode B16
   encode: function(text) {
     var text = text.replace(/\r/g, '');
     var digits = "0123456789ABCDEF";
@@ -72,9 +101,7 @@ const Base16 = {
   },
 
 
-  /**
-   * Decode Base 16
-   */
+  // Decode B16
   decode: function(text) {
     var s = '';
     for (var i = 0; i < text.length; i+=2) {
@@ -105,24 +132,31 @@ const keyToString = function(key) {
 
 const encryptRSA = function(pem, string) {
   const rsa = parsePrivateKey(pem);
-  return encode64(rsa.encrypt(string));
+  return Base64.encode(rsa.encrypt(string));
 }
 
 const decryptRSA = function(pem, string) {
   const rsa = parsePrivateKey(pem);
-  return rsa.decrypt(decode64(string));
+  return rsa.decrypt(Base64.decode(string));
 }
 
 
 
 
-// AES
 
+
+/**
+ * AES Utilities
+ *
+ *
+ * Exports:
+ *  - newKey:  Generate a new Key
+ *  - encrypt: Encrypt using AES
+ *  - decrypt: Decrypt using AES (into UTF-8)
+ */
 const AES = {
 
-  /**
-   * Generate a strong 256-bit AES key
-   */
+  // Generate a strong 256-bit AES key
   newKey: function() {
     const pass = window.CryptoJS.lib.WordArray.random(128/8);
     const salt = window.CryptoJS.lib.WordArray.random(128/8);
@@ -131,17 +165,13 @@ const AES = {
   },
 
 
-  /**
-   * Encrypt a string using AES
-   */
+  // Encrypt a string using AES
   encrypt: function(string, key) {
     return window.CryptoJS.AES.encrypt(string, key).toString();
   },
 
 
-  /**
-   * Decrypt a string back to UTF-8
-   */
+  // Decrypt a string back to UTF-8
   decrypt: function(string, key) {
     return window.CryptoJS.AES.decrypt(string, key).toString(window.CryptoJS.enc.Utf8);
   },
@@ -156,15 +186,15 @@ const AES = {
 
 // Decodes the B64 file, decrypts, encodes back to B64
 const decryptFile = function(file, key) {
-  const decoded   = decode64(file);
+  const decoded   = Base64.decode(file);
   const decrypted = AES.decrypt(decoded, key);
 
-  return encode64(decrypted);
+  return Base64.encode(decrypted);
 }
 
 // Takes raw file bytes, encrypts, and encodes to B64
 const encryptFile = function(file, key) {
-  return encode64(AES.encrypt(file, key));
+  return Base64.encode(AES.encrypt(file, key));
 }
 
 
@@ -207,7 +237,7 @@ const Crypto = {
   sha256,
 
   Base16,
-  encode64, decode64, decode64Blob,
+  Base64,
 
   parsePrivateKey, getPublicKey, keyToString,
   encryptRSA, decryptRSA,

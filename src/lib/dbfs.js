@@ -26,7 +26,7 @@ const isOwner = function(block, pem) {
 const decryptDownload = function(block, file, pem) {
   const file_key  = Crypto.decryptRSA(pem, block.data.file_key);
   const decrypted = Crypto.decryptFile(file, file_key);
-  const file_blob = Crypto.decode64Blob(decrypted);
+  const file_blob = Crypto.Base64.decodeBlob(decrypted);
 
   FileSaver.saveAs(file_blob, block.data.file_name);
 }
