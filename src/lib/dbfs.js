@@ -49,8 +49,8 @@ const createBlock = function(prevHash, file, pem) {
     }
   };
 
-  const signed = Crypto.signBlock(block, pem);
-  const hashed = Crypto.hashBlock(signed);
+  const signed = Crypto.Block.sign(block, pem);
+  const hashed = Crypto.Block.hash(signed);
 
   return {block: hashed, data: encrypted};
 }

@@ -220,53 +220,72 @@ const File = {
     const decrypted = AES.decrypt(decoded, key);
 
     return Base64.encode(decrypted);
-  }
+  },
 
 
   // Takes raw file bytes, encrypts, and encodes to B64
   encrypt: function(file, key) {
     const encrypted = AES.encrypt(file, key);
     return Base64.encode(encrypted);
-  }
+  },
 
 };
 
 
 
 
-// Blocks
-
-const fields = {
-  sign: ['data', 'type', 'prev', 'timestamp'],
-  hash: ['data', 'type', 'prev', 'timestamp', 'creator', 'signature']
-};
-
-const signBlock = function(block, pem) {
-  var block = _.clone(block);
-  var json  = Utils.encodeJSON(block, fields.sign);
-  var rsa   = RSA.parsePrivateKey(pem);
-  var pub   = RSA.getPublicKey(rsa);
-
-  block.signature = rsa.sign(json, 'sha256').toUpperCase();
-  block.creator = Crypto.Base16.encode(pub);
-
-  return block;
-}
-
-const hashBlock = function(block) {
-  var block = _.clone(block);
-  var json  = Utils.encodeJSON(block, fields.hash);
-
-  block.hash = sha256(json);
-
-  return block;
-}
 
 
+/**
+ * Block hashing/signing helpers. Keeps an internal record
+ * of which fields to sign and hash.
+ *
+ *
+ * Exports:
+ *  - hash
+ *  - sign
+ */
+const Block = (function() {
+  const fields = {
+    sign: ['data', 'type', 'prev', 'timestamp'],
+    hash: ['data', 'type', 'prev', 'timestamp', 'creator', 'signature']
+  };
 
 
-// Export
+  return {
+    // Return a new signed version of the block
+    sign: function(block, pem) {
+      var block = _.clone(block);
+      var json  = Utils.encodeJSON(block, fields.sign);
+      var rsa   = RSA.parsePrivateKey(pem);
+      var pub   = RSA.getPublicKey(rsa);
 
+      block.signature = rsa.sign(json, 'sha256').toUpperCase();
+      block.creator = Crypto.Base16.encode(pub);
+
+      return block;
+    },
+
+
+    // Return a new hashed version of the block
+    hash: function(block) {
+      var block = _.clone(block);
+      var json  = Utils.encodeJSON(block, fields.hash);
+      block.hash = sha256(json);
+
+      return block;
+    },
+
+  };
+})();
+
+
+
+
+
+/**
+ * Export Sub-Modules
+ */
 const Crypto = {
   sha256,
   Base16,
@@ -274,7 +293,7 @@ const Crypto = {
   RSA,
   AES,
   File,
-  signBlock, hashBlock,
+  Block,
 };
 
 
