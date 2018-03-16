@@ -204,20 +204,32 @@ const AES = {
 
 
 
-// Files
+/**
+ * File Encryption Helpers on top of AES
+ *
+ *
+ * Exports:
+ *  - encrypt
+ *  - decrypt
+ */
+const File = {
 
-// Decodes the B64 file, decrypts, encodes back to B64
-const decryptFile = function(file, key) {
-  const decoded   = Base64.decode(file);
-  const decrypted = AES.decrypt(decoded, key);
+  // Decodes the B64 file, decrypts, encodes back to B64
+  decrypt: function(file, key) {
+    const decoded   = Base64.decode(file);
+    const decrypted = AES.decrypt(decoded, key);
 
-  return Base64.encode(decrypted);
-}
+    return Base64.encode(decrypted);
+  }
 
-// Takes raw file bytes, encrypts, and encodes to B64
-const encryptFile = function(file, key) {
-  return Base64.encode(AES.encrypt(file, key));
-}
+
+  // Takes raw file bytes, encrypts, and encodes to B64
+  encrypt: function(file, key) {
+    const encrypted = AES.encrypt(file, key);
+    return Base64.encode(encrypted);
+  }
+
+};
 
 
 
@@ -257,12 +269,11 @@ const hashBlock = function(block) {
 
 const Crypto = {
   sha256,
-
-  Base16, Base64,
-
-  RSA, AES,
-
-  encryptFile, decryptFile,
+  Base16,
+  Base64,
+  RSA,
+  AES,
+  File,
   signBlock, hashBlock,
 };
 
