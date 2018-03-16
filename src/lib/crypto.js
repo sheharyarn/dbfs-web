@@ -24,25 +24,21 @@ const sha256 = function(text) {
  *
  *
  * Exports:
- *  - encode:     Encode to Base64
- *  - decode:     Decode from Base64
- *  - decodeBlob: Decode Base64 data into a raw blob
+ *  - encode
+ *  - decode
+ *  - decodeBlob
  */
 const Base64 = {
 
-  // Encode B64
-  encode: function(text) {
-    return btoa(text);
-  },
+  // Encode Base64
+  encode: function(text) { return btoa(text); },
 
 
-  // Decode B64
-  decode: function(text) {
-    return atob(text);
-  },
+  // Decode Base64
+  decode: function(text) { return atob(text); },
 
 
-  // Decode B64 into blob
+  // Decode Base64 data into a raw blob
   decodeBlob: function(b64Data, contentType, sliceSize) {
     contentType = contentType || '';
     sliceSize = sliceSize || 512;
@@ -79,12 +75,12 @@ const Base64 = {
  *
  *
  * Exports:
- *  - encode: Encode to Base64
- *  - decode: Decode from Base64
+ *  - encode
+ *  - decode
  */
 const Base16 = {
 
-  // Encode B16
+  // Encode Base16
   encode: function(text) {
     var text = text.replace(/\r/g, '');
     var digits = "0123456789ABCDEF";
@@ -101,7 +97,7 @@ const Base16 = {
   },
 
 
-  // Decode B16
+  // Decode Base16
   decode: function(text) {
     var s = '';
     for (var i = 0; i < text.length; i+=2) {
@@ -109,6 +105,7 @@ const Base16 = {
     }
     return decodeURIComponent(escape(s));
   },
+
 };
 
 
@@ -174,9 +171,9 @@ const RSA = {
  *
  *
  * Exports:
- *  - newKey:  Generate a new Key
- *  - encrypt: Encrypt using AES
- *  - decrypt: Decrypt using AES (into UTF-8)
+ *  - newKey
+ *  - encrypt
+ *  - decrypt
  */
 const AES = {
 
@@ -195,10 +192,11 @@ const AES = {
   },
 
 
-  // Decrypt a string back to UTF-8
+  // Decrypt a string (back into UTF-8)
   decrypt: function(string, key) {
     return window.CryptoJS.AES.decrypt(string, key).toString(window.CryptoJS.enc.Utf8);
   },
+
 };
 
 
