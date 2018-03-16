@@ -8,11 +8,22 @@ import Utils from 'lib/utils'
 
 
 
-// Hashing
 
-const sha256 = function(text) {
-  return window.KJUR.crypto.Util.sha256(text).toUpperCase();
-}
+/**
+ * Hashing Functions
+ *
+ *
+ * Exports:
+ *  - sha256
+ */
+const Hash = {
+
+  // Calculate uppercase SHA256
+  sha256: function(text) {
+    return window.KJUR.crypto.Util.sha256(text).toUpperCase();
+  },
+
+};
 
 
 
@@ -271,7 +282,7 @@ const Block = (function() {
     hash: function(block) {
       var block = _.clone(block);
       var json  = Utils.encodeJSON(block, fields.hash);
-      block.hash = sha256(json);
+      block.hash = Hash.sha256(json);
 
       return block;
     },
@@ -287,7 +298,7 @@ const Block = (function() {
  * Export Sub-Modules
  */
 const Crypto = {
-  sha256,
+  Hash,
   Base16,
   Base64,
   RSA,

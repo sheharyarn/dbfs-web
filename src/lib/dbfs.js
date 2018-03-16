@@ -44,7 +44,7 @@ const createBlock = function(prevHash, file, pem) {
       file_name: file.name,
       file_type: file.type,
       file_size: file.size,
-      file_hash: Crypto.sha256(encrypted),
+      file_hash: Crypto.Hash.sha256(encrypted),
       file_key:  Crypto.RSA.encrypt(pem, fileKey),
     }
   };
