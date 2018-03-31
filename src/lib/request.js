@@ -16,7 +16,7 @@ import constants from 'lib/constants'
  * Create an Axios Client with defaults
  */
 const client = axios.create({
-  baseURL: constants.api.url
+  baseURL: constants.api.url()
 });
 
 
