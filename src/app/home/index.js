@@ -24,6 +24,7 @@ class Home extends React.Component {
     };
 
     this.showDialog = this.showDialog.bind(this);
+    this.readStatusChannel = this.readStatusChannel.bind(this);
   }
 
 
@@ -38,9 +39,21 @@ class Home extends React.Component {
     let channel = socket.channel("status", {});
     channel.join().receive("ok", response => { console.log("Joined Status Channel") });
 
-    this.setState({ socket, channel });
+    let interval = setInterval(this.readStatusChannel, 1000);
+
+    this.setState({ socket, channel, interval });
   }
 
+
+  readStatusChannel() {
+    let {channel} = this.state;
+
+    channel.push('get', {})
+      .receive("ok", response => {
+        console.log("Status Update:", response);
+        this.setState({nodes: response.nodes})
+      });
+  }
 
 
   render() {
