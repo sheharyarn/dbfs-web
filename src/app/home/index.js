@@ -1,10 +1,13 @@
 import React       from 'react'
-import NodeService from 'services/node'
+import { Socket }  from 'phoenix'
 
 import BlockList   from 'app/home/block-list'
 import BlockCreate from 'app/home/block-create'
 import Title       from 'components/title'
 import BulletInfo  from 'components/bullet-info'
+import NodeService from 'services/node'
+import Constants   from 'lib/constants'
+
 
 
 class Home extends React.Component {
@@ -28,7 +31,16 @@ class Home extends React.Component {
     NodeService
       .index()
       .then((response) => this.setState(response));
+
+    let socket = new Socket(Constants.api.socket(), {params: {}});
+    socket.connect();
+
+    let channel = socket.channel("status", {});
+    channel.join().receive("ok", response => { console.log("Joined Status Channel") });
+
+    this.setState({ socket, channel });
   }
+
 
 
   render() {
@@ -79,7 +91,8 @@ class Home extends React.Component {
   renderNode(node) {
     return (
       <li className='node-item' key={node.name}>
-        {node.name} <span>({node.sync}%)</span>
+        <b>{node.name}</b>
+        <span>({node.sync}%)</span>
       </li>
     );
   }
