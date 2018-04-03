@@ -44,6 +44,13 @@ class Home extends React.Component {
     this.setState({ socket, channel, interval });
   }
 
+  componentWillUnmount() {
+    let {socket, interval} = this.state;
+    clearInterval(interval);
+    socket.disconnect();
+    console.log("Disconnecting Socket");
+  }
+
 
   readStatusChannel() {
     let {channel} = this.state;
