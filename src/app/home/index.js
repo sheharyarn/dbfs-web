@@ -109,10 +109,13 @@ class Home extends React.Component {
 
 
   renderNode(node) {
+    const klass = (node.sync == 100) ? 'is-primary' : 'is-warning'
+
     return (
       <li className='node-item' key={node.name}>
         <b>{node.name}</b>
         <span>({node.sync}%)</span>
+        <progress className={`progress is-small ${klass}`} value={node.sync} max='100'></progress>
       </li>
     );
   }
