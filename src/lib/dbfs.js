@@ -56,10 +56,27 @@ const createBlock = function(prevHash, file, pem) {
 }
 
 
+const deleteBlock = function(prevHash, parentHash, pem) {
+  const block = {
+    type: 'file_delete',
+    prev: prevHash,
+    timestamp: Utils.timestamp(),
+    data: {
+      parent_hash: parentHash,
+    }
+  }
+
+  const signed = Crypto.Block.sign(block, pem);
+  const hashed = Crypto.Block.hash(signed);
+
+  return hashed;
+}
+
+
 // Export
 
 const DBFS = {
-  isOwner, decryptDownload, createBlock,
+  isOwner, decryptDownload, createBlock, deleteBlock,
 };
 
 
