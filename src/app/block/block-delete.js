@@ -95,6 +95,26 @@ class BlockDelete extends React.Component {
 
     if (DBFS.isOwner(block, privateKey)) {
       this.setBusy(true);
+
+      const deleteBlock = {
+        block: DBFS.deleteBlock(last, block.hash, privateKey),
+        data:  null,
+      };
+
+      // console.log(deleteBlock);
+
+      BlockService
+        .create(deleteBlock)
+        .then(() => {
+          this.setBusy(false);
+          this.close();
+          window.location.reload();
+        })
+        .catch((err) => {
+          this.setBusy(false);
+          alert(`Error!\n\n${err}`);
+        })
+
     } else {
       alert("Entered Key does not match block owner's");
     }
