@@ -17,7 +17,7 @@ class Home extends React.Component {
     this.state = {
       status: 'inactive',
       last_hash: null,
-      count: 0,
+      count: {all: 0, files: 0},
       nodes: [],
       recent: {entries: []},
       uploading: false,
@@ -77,8 +77,8 @@ class Home extends React.Component {
           <Title value='Blockchain Information' />
           <ul>
             <BulletInfo name='App Status'    value={status} />
-            <BulletInfo name='No. of Blocks' value={count} />
-            <BulletInfo name='No. of Files'  value={count - 1} />
+            <BulletInfo name='No. of Blocks' value={count.all} />
+            <BulletInfo name='No. of Files'  value={count.files} />
             <BulletInfo name='No. of Nodes'  value={nodes.length} />
           </ul>
 
