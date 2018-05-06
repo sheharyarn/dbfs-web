@@ -95,6 +95,21 @@ class Block extends React.Component {
     return (
       <div>
         { utils.renderIf(
+            !this.typeIs('file_create'),
+            <div className='notification'>
+                Unactionable Block
+            </div>
+        )}
+
+        { utils.renderIf(
+            this.isDeleted(),
+            <div className='notification'>
+                File Deleted
+            </div>
+        )}
+
+
+        { utils.renderIf(
             (this.typeIs('file_create') && !this.isDeleted()),
             <a
               className='notification is-dark is-block'
@@ -120,6 +135,7 @@ class Block extends React.Component {
                 Previous Block
             </Link>
         )}
+
 
         <BlockDownload
           block={block}
