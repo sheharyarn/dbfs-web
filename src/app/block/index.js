@@ -5,6 +5,7 @@ import utils  from 'lib/utils'
 import Title         from 'components/title'
 import RawDisplay    from 'components/raw-display'
 import BlockService  from 'services/block'
+import BlockDelete   from 'app/block/block-delete'
 import BlockDownload from 'app/block/block-download'
 
 
@@ -13,8 +14,9 @@ class Block extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {downloading: false};
-    this.showDialog = this.showDialog.bind(this);
+    this.state = {downloading: false, deleting: false, meta: {}};
+    this.showDeleteDialog = this.showDeleteDialog.bind(this);
+    this.showDownloadDialog = this.showDownloadDialog.bind(this);
   }
 
   componentDidMount() {
@@ -41,6 +43,10 @@ class Block extends React.Component {
 
   typeIs(type) {
     return (this.state.type === type);
+  }
+
+  isDeleted() {
+    return (!!this.state.meta.deleted);
   }
 
 
@@ -84,16 +90,25 @@ class Block extends React.Component {
 
 
   renderSidebar(block) {
-    const {downloading} = this.state;
+    const {downloading, deleting} = this.state;
 
     return (
       <div>
         { utils.renderIf(
-            this.typeIs('file_create'),
+            (this.typeIs('file_create') && !this.isDeleted()),
             <a
               className='notification is-dark is-block'
-              onClick={() => this.showDialog(true)}>
+              onClick={() => this.showDownloadDialog(true)}>
                 Download File
+            </a>
+        )}
+
+        { utils.renderIf(
+            (this.typeIs('file_create') && !this.isDeleted()),
+            <a
+              className='notification is-danger is-block'
+              onClick={() => this.showDeleteDialog(true)}>
+                Delete File
             </a>
         )}
 
@@ -109,14 +124,24 @@ class Block extends React.Component {
         <BlockDownload
           block={block}
           active={downloading}
-          onClose={() => this.showDialog(false)}
+          onClose={() => this.showDownloadDialog(false)}
+        />
+
+        <BlockDelete
+          block={block}
+          active={deleting}
+          onClose={() => this.showDeleteDialog(false)}
         />
       </div>
     );
   }
 
 
-  showDialog(bool) {
+  showDeleteDialog(bool) {
+    this.setState({deleting: bool});
+  }
+
+  showDownloadDialog(bool) {
     this.setState({downloading: bool});
   }
 
